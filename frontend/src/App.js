@@ -1,7 +1,19 @@
 import logo from './logo.svg';
 import './App.css';
+import React, { useEffect, useState } from "react";
+
 
 function App() {
+
+  // Test CORS connection to flask
+  const [message, setMessage] = useState("")
+  useEffect(() => {
+    fetch("http://127.0.0.1:5000/api/tests")
+      .then((res) => res.json())
+      .then((data) => setMessage(data.message))
+      .catch((err) => console.error("API error:", err));
+  }, []);
+
   return (
     <div className="App">
       <header className="App-header">
@@ -17,6 +29,7 @@ function App() {
         >
           Learn React
         </a>
+        <p>Message from API: {message}</p>
       </header>
     </div>
   );
