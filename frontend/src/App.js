@@ -1,6 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
 import React, { useEffect, useState } from "react";
+import TripForm from "./TripForm";
+
 
 
 function App() {
@@ -30,6 +32,7 @@ function App() {
           Learn React
         </a>
         <p>Message from API: {message}</p>
+        <TripForm />
       </header>
     </div>
   );
