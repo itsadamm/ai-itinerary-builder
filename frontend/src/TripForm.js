@@ -24,8 +24,9 @@ function TripForm() {
     const [cityInput, setCityInput] = useState("");
 
     // submit handler function
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault(); // prevents page reload
+
         const formData = {
             travelPace,
             interests, 
@@ -35,7 +36,20 @@ function TripForm() {
             countries: countries.map((c) => c.label),
             prioritizedCities: cities,
         };
-        console.log("Form Submitted:", formData);
+        
+        // send form data from React to backend 
+        try{
+            const response = await fetch("http://127.0.0.1:5000/api/itinerary", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
+            });
+
+            const result = await response.json();
+            console.log("Server response:", result);
+        } catch (err){
+            console.error("Error sending data to backend:", err);
+        }
     };
 
 
