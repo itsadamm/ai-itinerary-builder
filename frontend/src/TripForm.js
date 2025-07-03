@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Select from "react-select"; // library react-select
 import countries from "i18n-iso-countries";
 import enLocale from "i18n-iso-countries/langs/en.json";
+import ItineraryEditor from "./ItineraryEditor";
 
 countries.registerLocale(enLocale);
 const countryObj = countries.getNames("en", { select: "official" });
@@ -203,13 +204,8 @@ function TripForm() {
             {travelStyle && <p>Travel Style: {travelStyle}</p>}
             {countries.length > 0 && (<p>Selected Countries: {countries.map((c) => c.label).join(", ")}</p>)}
             {/* only shows if there's an itinerary. pre-wrap makes it look clean*/}
-            {itinerary && (
-                <div>
-                    <h3>Generated Itinerary:</h3>
-                    <pre style={{ whiteSpace: "pre-wrap", textAlign: "left" }}>
-                        {itinerary}
-                    </pre>
-                </div>
+            {parsedItinerary.length > 0 && (
+                <ItineraryEditor itinerary={parsedItinerary} />
             )}
 
 
