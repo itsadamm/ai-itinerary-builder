@@ -11,6 +11,31 @@ const countryOptions = Object.entries(countryObj).map(([codeBlock, name]) => ({
     label: name,
 }));
 
+// function to parse text into editable blocks by day and activities
+function parseItinerary(rawText) {
+    const dayBlocks = rawText.split(/\*\*Day (\d+): (.*?)\*\*/g).slice(1)
+    const parsed = [];
+
+    for (let i = 0; i < dayBlocks.length; i += 3) {
+        const dayNum = parseInt(dayBlocks[i]);
+        const title = dayBlocks[i + 1].trim();
+        const content = dayBlocks[i + 2];
+
+        const activities = content
+            .split(/\n+/)
+            .map((line) => line.trim())
+            .filter((line) => line && !line.startsWith("---"));
+        
+        parsed.push({
+            day: dayNum,
+            title: title,
+            activities: activities,
+        });
+    
+    }
+    return parsed;
+}
+
 function TripForm() {
 
     // travelPace = variable, setTravelPace = function
@@ -22,6 +47,8 @@ function TripForm() {
     const [countries, setCountries] = useState([]);
     const [cities, setCities] = useState([]);
     const [cityInput, setCityInput] = useState("");
+    const [itinerary, setItinereary] = useState("");
+    const [parsedItinerary, setParsedItinerary] = useState([]);
 
     // submit handler function
     const handleSubmit = async (e) => {
@@ -47,6 +74,10 @@ function TripForm() {
 
             const result = await response.json();
             console.log("Server response:", result);
+            setItinereary(result.itinerary) ;
+            const parsed = parseItinerary(result.itinerary);
+            console.log("Parsed itinerary:", parsed);
+            setParsedItinerary(parsed);
         } catch (err){
             console.error("Error sending data to backend:", err);
         }
@@ -165,14 +196,21 @@ function TripForm() {
                 <br />
                 <button type="submit">Generate Itinerary</button>
             </form>
+            {/* These print out your choices on the form*/}
             {travelPace && <p>You selected: {travelPace} pace</p>}
             {interests.length > 0 && (<p>Selected Interests: {interests.join(", ")}</p>)}
             {budgetLevel && <p>Budget Level: {budgetLevel}</p>}
             {travelStyle && <p>Travel Style: {travelStyle}</p>}
-            {countries.length > 0 && (
-  <p>Selected Countries: {countries.map((c) => c.label).join(", ")}</p>
-            
-)}
+            {countries.length > 0 && (<p>Selected Countries: {countries.map((c) => c.label).join(", ")}</p>)}
+            {/* only shows if there's an itinerary. pre-wrap makes it look clean*/}
+            {itinerary && (
+                <div>
+                    <h3>Generated Itinerary:</h3>
+                    <pre style={{ whiteSpace: "pre-wrap", textAlign: "left" }}>
+                        {itinerary}
+                    </pre>
+                </div>
+            )}
 
 
         </div>

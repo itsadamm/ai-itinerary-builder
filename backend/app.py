@@ -38,6 +38,14 @@ def generate_itinerary():
         f"- Budget: {data['budgetLevel']}\n"
         f"- Travel Style: {data['travelStyle']}\n\n"
         f"Format the itinerary day by day."
+        f"**Day 1: [Title for the day]**\n"
+        f"- [Activity 1]\n"
+        f"- [Activity 2]\n"
+        f"...\n"
+        f"\n"
+        f"**Day 2: [Title]**\n"
+        f"- [Activity 1]...\n\n"
+        f"Format every day this way, with each day starting with **Day X: Title**, and all activities as bulleted lines."
     )
 
     try:
