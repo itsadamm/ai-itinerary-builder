@@ -4,6 +4,7 @@ import Select from "react-select"; // library react-select
 import countries from "i18n-iso-countries";
 import enLocale from "i18n-iso-countries/langs/en.json";
 import ItineraryEditor from "./ItineraryEditor";
+import { v4 as uuidv4 } from 'uuid';
 
 countries.registerLocale(enLocale);
 const countryObj = countries.getNames("en", { select: "official" });
@@ -25,7 +26,9 @@ function parseItinerary(rawText) {
         const activities = content
             .split(/\n+/)
             .map((line) => line.trim())
-            .filter((line) => line && !line.startsWith("---"));
+            .filter((line) => line && !line.startsWith("---"))
+            .map((line) => ({ id: uuidv4(), text: line })); // <== Add this line
+
         
         parsed.push({
             day: dayNum,
