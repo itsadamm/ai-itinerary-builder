@@ -31,6 +31,7 @@ function parseItinerary(rawText) {
 
         
         parsed.push({
+            id: uuidv4(),
             day: dayNum,
             title: title,
             activities: activities,

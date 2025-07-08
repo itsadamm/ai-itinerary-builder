@@ -151,119 +151,133 @@ function ItineraryEditor({ itinerary }) {
 
     return (
     <DragDropContext onDragEnd={handleDragEnd}>
-        <div>
-        <h2>Edit Your Itinerary</h2>
+        <Droppable droppableId="all-days" type="DAY">
+            {(outerProvided) => (
+                <div ref={outerProvided.innerRef} {...outerProvided.droppableProps}>
+                    <h2>Edit Your Itinerary</h2>
 
-        {/* Loop through each day */}
-        {editableItinerary.map((day, dayIndex) => (
-            <div
-            key={day.id ?? `day-${dayIndex}`}
-            style={{
-                border: "1px solid #ccc",
-                padding: "15px",
-                marginBottom: "20px",
-                borderRadius: "6px",
-                backgroundColor: "#fafafa",
-            }}
-            >
-            <h3>
-                Day {day.day}: {day.title}
-            </h3>
-
-            {/* Draggable activities for THIS day */}
-            <Droppable droppableId={`day-${dayIndex}`} type="ACTIVITY">
-                {(provided) => (
-                <ul
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                    style={{ listStyle: "none", paddingLeft: 0 }}
-                >
-                    {day.activities.map((activityObj, activityIndex) => (
-                    <Draggable
-                        key={activityObj.id}
-                        draggableId={activityObj.id}
-                        index={activityIndex}
-                    >
-                        {(provided) => (
-                        <li
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            style={{
-                            padding: "8px",
-                            marginBottom: "6px",
-                            border: "1px solid lightgray",
-                            borderRadius: "4px",
-                            backgroundColor: "#f9f9f9",
-                            color: "#333",
-                            ...provided.draggableProps.style,
-                            }}
-                        >
-                            {editingDay === dayIndex &&
-                            editingActivityIndex === activityIndex ? (
-                            <div>
-                                <textarea
-                                rows={2}
-                                value={editedText}
-                                onChange={(e) =>
-                                    setEditedText(e.target.value)
-                                }
+                    {/* Loop through each day */}
+                    {editableItinerary.map((day, dayIndex) => (
+                        <Draggable
+                        key={day.id}
+                        draggableId={day.id}
+                        index={dayIndex}>
+                            {(dayProvided) => (
+                                <div
+                                ref={dayProvided.innerRef}
+                                {...dayProvided.draggableProps}
                                 style={{
-                                    width: "80%",
-                                    padding: "6px",
                                     border: "1px solid #ccc",
-                                    color: "#333",
-                                    backgroundColor: "#fff",
+                                    padding: "15px",
+                                    marginBottom: "20px",
+                                    borderRadius: "6px",
+                                    /*backgroundColor: "#fafafa",*/
+                                    ...dayProvided.draggableProps.style,
                                 }}
-                                />
-                                <button onClick={handleSave}>Save</button>
-                                <button onClick={handleDelete}>Delete</button>
-                            </div>
-                            ) : (
-                            <span
-                                onClick={() =>
-                                handleActivityClick(
-                                    dayIndex,
-                                    activityIndex,
-                                    activityObj
-                                )
-                                }
-                                style={{ color: "#333", cursor: "pointer" }}
-                            >
-                                {activityObj.text}
-                            </span>
-                            )}
-                        </li>
-                        )}
-                    </Draggable>
-                    ))}
-                    {provided.placeholder}
-                </ul>
-                )}
-            </Droppable>
+                                >
+                                <h3 {...dayProvided.dragHandleProps}>
+                                    Day {day.day}: {day.title}
+                                </h3>
 
-            {/* Add-activity input */}
-            <div style={{ marginTop: "10px" }}>
-                <input
-                type="text"
-                placeholder="Add new activity..."
-                value={newActivities[dayIndex] || ""}
-                onChange={(e) =>
-                    handleNewActivityChange(dayIndex, e.target.value)
-                }
-                style={{
-                    width: "70%",
-                    padding: "6px",
-                    marginRight: "8px",
-                    border: "1px solid #ccc",
-                    borderRadius: "4px",
-                }}
-                />
-                <button onClick={() => handleAddActivity(dayIndex)}>Add</button>
-            </div>
-            </div>
-        ))}
-        </div>
+                                {/* Draggable activities for THIS day */}
+                                <Droppable droppableId={`day-${dayIndex}`} type="ACTIVITY">
+                                    {(provided) => (
+                                    <ul
+                                        ref={provided.innerRef}
+                                        {...provided.droppableProps}
+                                        style={{ listStyle: "none", paddingLeft: 0 }}
+                                    >
+                                        {day.activities.map((activityObj, activityIndex) => (
+                                        <Draggable
+                                            key={activityObj.id}
+                                            draggableId={activityObj.id}
+                                            index={activityIndex}
+                                        >
+                                            {(provided) => (
+                                            <li
+                                                ref={provided.innerRef}
+                                                {...provided.draggableProps}
+                                                {...provided.dragHandleProps}
+                                                style={{
+                                                padding: "8px",
+                                                marginBottom: "6px",
+                                                border: "1px solid lightgray",
+                                                borderRadius: "4px",
+                                                backgroundColor: "#f9f9f9",
+                                                color: "#333",
+                                                ...provided.draggableProps.style,
+                                                }}
+                                            >
+                                                {editingDay === dayIndex &&
+                                                editingActivityIndex === activityIndex ? (
+                                                <div>
+                                                    <textarea
+                                                    rows={2}
+                                                    value={editedText}
+                                                    onChange={(e) =>
+                                                        setEditedText(e.target.value)
+                                                    }
+                                                    style={{
+                                                        width: "80%",
+                                                        padding: "6px",
+                                                        border: "1px solid #ccc",
+                                                        color: "#333",
+                                                        backgroundColor: "#fff",
+                                                    }}
+                                                    />
+                                                    <button onClick={handleSave}>Save</button>
+                                                    <button onClick={handleDelete}>Delete</button>
+                                                </div>
+                                                ) : (
+                                                <span
+                                                    onClick={() =>
+                                                    handleActivityClick(
+                                                        dayIndex,
+                                                        activityIndex,
+                                                        activityObj
+                                                    )
+                                                    }
+                                                    style={{ color: "#333", cursor: "pointer" }}
+                                                >
+                                                    {activityObj.text}
+                                                </span>
+                                                )}
+                                            </li>
+                                            )}
+                                        </Draggable>
+                                        ))}
+                                        {provided.placeholder}
+                                    </ul>
+                                    )}
+                                </Droppable>
+
+                                {/* Add-activity input */}
+                                <div style={{ marginTop: "10px" }}>
+                                    <input
+                                    type="text"
+                                    placeholder="Add new activity..."
+                                    value={newActivities[dayIndex] || ""}
+                                    onChange={(e) =>
+                                        handleNewActivityChange(dayIndex, e.target.value)
+                                    }
+                                    style={{
+                                        width: "70%",
+                                        padding: "6px",
+                                        marginRight: "8px",
+                                        border: "1px solid #ccc",
+                                        borderRadius: "4px",
+                                    }}
+                                    />
+                                    <button onClick={() => handleAddActivity(dayIndex)}>Add</button>
+                                </div>
+                                </div>
+                            )}
+                        </Draggable>
+                    ))}
+                    {outerProvided.placeholder}
+                </div>
+            )}
+        </Droppable>
     </DragDropContext>
     );
 
